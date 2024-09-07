@@ -1,0 +1,41 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/plants/plant-index.css' %}"/>
+{% endblock %} 
+{% block content %}
+
+<section class="page-header">
+  <h1>Plant List</h1>
+  <img src="{% static 'images/plant-garden.svg' %}" alt="A plant in a garden" />
+  <img src="{% static 'images/plant-pot.svg' %}" alt="A plant in a pot" />
+  <img src="{% static 'images/plant-small.svg' %}" alt="A small plant" />
+  <img src="{% static 'images/plant.svg' %}" alt="plant" />
+</section>
+
+<section class="card-container">
+    {% for plant in plants %}
+      <div class="card">
+        <a href="{% url 'plant-detail' plant.id %}">
+    
+        <div class="card-content">
+        <div class="card-img-container">
+          <img
+            src="{% static 'images/plant-garden.svg' %}"
+            alt="A garden plant"
+          />
+        </div>
+        <h2 class="card-title">{{ plant.name }}</h2>
+        {% if plant.age > 0 %}
+        <p>A {{ plant.age }} year old {{ plant.species }}</p>
+        {% else %}
+        <p>A {{ plant.species }} plant.</p>
+        {% endif %}
+        <p><small>{{ plant.description }}</small></p>
+      </div>
+    </a>
+      </div>
+    {% endfor %}
+  </section>
+
+{% endblock %}

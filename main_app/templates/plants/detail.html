@@ -1,0 +1,75 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/plants/plant-detail.css' %}" />
+{% endblock %} 
+
+{% block content %}
+<section class="plant-container">
+  <div class="plant-img">
+    <img src="{% static 'images/plant-garden.svg' %}" alt="A garden plant"/>
+  </div>
+  <div class="plant-details">
+    <h1>{{ plant.name }}</h1>
+    {% if plant.age > 0 %}
+      <h2>A {{ plant.age }} year old {{ plant.species }}</h2>
+    {% else %}
+      <h2>A {{ plant.species }} plant.</h2>
+    {% endif %}
+    <p>{{ plant.description }}</p>
+  </div>
+
+  <div class="plant-actions">
+    <a href="{% url 'plant-update' plant.id %}" class="btn">Edit</a>
+    <br>
+    <a href="{% url 'plant-delete' plant.id %}" class="btn danger">Delete</a>
+  </div>
+</section>
+
+<div class="plant-care-container">
+  <section class="care-actions">
+    <div class="subsection-title">
+      <h2>Care Actions</h2>
+      <img src="{% static 'images/plant.svg' %}" alt="Plant care actions" />
+    </div>
+    <h3>Add a Care Action</h3>
+
+    <form 
+      action="{% url 'add-care' plant.id %}" 
+      method="post" 
+      class="subsection-content" 
+      autocomplete="off">
+      {% csrf_token %} 
+      {{ care_form.as_p }}
+      <button type="submit" class="btn submit">Add Care Action</button>
+    </form>
+
+    <h3>Past Care Actions</h3>
+    {% if plant.care_set.all.count %}
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for care in plant.care_set.all %}
+            <tr>
+              <td>{{ care.date }}</td>
+              <td>{{ care.get_action_display }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      
+    {% else %}
+      <div class="subsection-content">
+        <p> No care actions have been recorded for {{ plant.name }}!</p>
+      </div>
+
+    {% endif %}
+  </section>
+</div>
+  
+{% endblock %}
